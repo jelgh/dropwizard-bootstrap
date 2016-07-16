@@ -2,6 +2,8 @@ package se.jelgh.dropwizard.resources.v1;
 
 import com.google.inject.Inject;
 import java.util.UUID;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 import org.modelmapper.ModelMapper;
 import se.jelgh.dropwizard.api.v1.UserService;
 import se.jelgh.dropwizard.core.User;
@@ -22,6 +24,9 @@ public class UserServiceResource implements UserService {
     @Override
     public UserDTO get(UUID id) {
         User user = controller.get(id);
+        if (user == null) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
         return mapper.map(user, UserDTO.class);
     }
 
